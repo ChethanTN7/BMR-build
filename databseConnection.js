@@ -6,7 +6,7 @@ function dbConnection() {
   //   console.log("DB_URL:", DB_URL);
   mongoose.connect(DB_URL, {
     // useNewUrlPareser: true,
-    // useUnifiedTopology: true
+    // useUnifiedTopology: true,
   });
 }
 

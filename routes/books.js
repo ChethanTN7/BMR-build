@@ -2,15 +2,22 @@ const express = require("express");
 const { books } = require("../data/books.json");
 const { users } = require("../data/users.json");
 
+const { UserModel, BookModel } = require("../models/index");
+const {
+  getAllBooks,
+  getSingleBookByID,
+} = require("../controllers/book-controller");
+
 const router = express.Router();
 
 // get all the books
-router.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    data: books,
-  });
-});
+// router.get("/", (req, res) => {
+//   res.status(200).json({
+//     success: true,
+//     data: books,
+//   });
+// });
+router.get("/", getAllBooks);
 
 // all issued books
 router.get("/issued/by-user", (req, res) => {
@@ -46,23 +53,24 @@ router.get("/issued/by-user", (req, res) => {
 });
 
 // get book by id
-router.get("/:id", (req, res) => {
-  const { id } = req.params;
+// router.get("/:id", (req, res) => {
+//   const { id } = req.params;
 
-  const book = books.find((each) => each.id === id);
-  if (!book) {
-    return res.status(404).json({
-      success: false,
-      message: "Book doesn't found",
-    });
-  }
+//   const book = books.find((each) => each.id === id);
+//   if (!book) {
+//     return res.status(404).json({
+//       success: false,
+//       message: "Book doesn't found",
+//     });
+//   }
 
-  return res.status(200).json({
-    success: true,
-    message: "Book found",
-    data: book,
-  });
-});
+//   return res.status(200).json({
+//     success: true,
+//     message: "Book found",
+//     data: book,
+//   });
+// });
+router.get("/:id", getSingleBookByID);
 
 // Add a new book
 router.post("/", (req, res) => {
