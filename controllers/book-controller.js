@@ -1,5 +1,5 @@
 const { UserModel, BookModel } = require("../models/index");
-const userModel = require("../models/user-model");
+const IssuedBooks = require("../dtos/book-dto");
 
 exports.getAllBooks = async (req, res) => {
   const books = await BookModel.find();
@@ -40,6 +40,8 @@ exports.getAllIssuedBooks = async (req, res) => {
     issuedBook: { $exists: true },
   }).populate("issuesBook");
 
+  const issuedBooks = users.map((each) => new IssuedBooks(each));
+
   if (issuedBooks.length === 0) {
     return (
       res.status(404),
@@ -54,6 +56,47 @@ exports.getAllIssuedBooks = async (req, res) => {
     success: true,
     message: "User with the issued book....",
     data: issuedBooks,
+  });
+};
+
+exports.addNewBook = async (req, res) => {
+  const { data } = req.body;
+
+  if (!data) {
+    res.status(400).json({
+      success: false,
+      message: "No data to add a book",
+    });
+  }
+
+  await BookModel.create(data);
+  const allBooks = await BookModel.find();
+
+  return res.status(201).json({
+    success: false,
+    message: "New book added!!",
+    data: allBooks,
+  });
+};
+
+exports.updateBookById = async (req, res) => {
+  const { id } = req.params;
+  const { data } = req.body;
+
+  const updatedBook = await BookModel.findOneAndUpdate(
+    {
+      _id: id,
+    },
+    data,
+    {
+      new: true,
+    }
+  );
+
+  return res.status(200).json({
+    success: true,
+    message: "Updated the book by their id",
+    data: updatedData,
   });
 };
 
