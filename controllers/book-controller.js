@@ -38,18 +38,15 @@ exports.getSingleBookByID = async (req, res) => {
 exports.getAllIssuedBooks = async (req, res) => {
   const users = await UserModel.find({
     issuedBook: { $exists: true },
-  }).populate("issuesBook");
+  }).populate("issuedBook");
 
   const issuedBooks = users.map((each) => new IssuedBooks(each));
 
   if (issuedBooks.length === 0) {
-    return (
-      res.status(404),
-      express.json({
-        success: false,
-        message: "No book have been issued",
-      })
-    );
+    return res.status(404).json({
+      success: false,
+      message: "No book have been issued",
+    });
   }
 
   return res.status(200).json({
@@ -96,7 +93,7 @@ exports.updateBookById = async (req, res) => {
   return res.status(200).json({
     success: true,
     message: "Updated the book by their id",
-    data: updatedData,
+    data: updatedBook,
   });
 };
 
